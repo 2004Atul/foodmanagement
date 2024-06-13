@@ -1,30 +1,16 @@
 <?php
-// Start Session
-session_start();
-
-// Fetch environment variables
-$dbServer = getenv('orderista.database.windows.net');
-$dbName = getenv('onlinefoodorder');
-$dbUser = getenv('azure');
-$dbPassword = getenv('@Atul2004');
-
-if (!$dbServer || !$dbName || !$dbUser || !$dbPassword) {
-    die('Environment variables for database connection are not set.');
+// PHP Data Objects(PDO) Sample Code:
+try {
+    $conn = new PDO("sqlsrv:server = tcp:orderista.database.windows.net,1433; Database = onlinefoodorder", "azure", "{your_password_here}");
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+}
+catch (PDOException $e) {
+    print("Error connecting to SQL Server.");
+    die(print_r($e));
 }
 
-// Database connection
-$conn = mysqli_connect($dbServer, $dbUser, $dbPassword, $dbName);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
-
-echo "Connected successfully to the Azure SQL Database";
-
-// Note: You can use the following lines if you are using a local database for development
-// define('LOCALHOST', 'localhost');
-// define('DB_USERNAME', 'root');
-// define('DB_PASSWORD', '');
-// define('DB_NAME', 'onlinefoodorder');
-// $conn = mysqli_connect(LOCALHOST, DB_USERNAME, DB_PASSWORD, DB_NAME) or die(mysqli_error()); //Database Connection
+// SQL Server Extension Sample Code:
+$connectionInfo = array("UID" => "azure", "pwd" => "{your_password_here}", "Database" => "onlinefoodorder", "LoginTimeout" => 30, "Encrypt" => 1, "TrustServerCertificate" => 0);
+$serverName = "tcp:orderista.database.windows.net,1433";
+$conn = sqlsrv_connect($serverName, $connectionInfo);
 ?>
